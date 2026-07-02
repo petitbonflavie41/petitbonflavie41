@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Team Building Été 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sable:#F5F9FC;
+    --sable-dark:#EBE0C6;
+    --nuit:#2B2118;
+    --blanc:#FFFDF8;
+    --bleu-fonce:#4E7FB0;
+    --bleu-mid:#6FA8D8;
+    --bleu-clair:#A9D6F0;
+    --bleu-pale:#EAF4FB;
+    --corail:#FFB4A2;
+    --jaune:#FFD97D;
+    --rose:#A9D6F0;
+    --radius:22px;
+    --shadow:0 10px 30px rgba(43,33,24,0.15);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--sable);
+    color:var(--nuit);
+    font-family:'Quicksand',sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fredoka',sans-serif;
+    margin:0;
+  }
+  p{line-height:1.5;}
+  .wrap{max-width:520px; margin:0 auto; padding:0 22px;}
+  ::selection{background:var(--bleu-clair); color:var(--nuit);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    background:linear-gradient(160deg, var(--corail) 0%, #FFC2A8 20%, var(--jaune) 42%, #CDE3F0 68%, var(--bleu-clair) 100%);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    padding-bottom:28px;
+  }
+  html.locked, html.locked body{overflow:hidden; height:100%; overscroll-behavior:none;}
+
+  .sunburst{
+    position:absolute; top:-70px; right:-50px; width:240px; height:240px; border-radius:50%;
+    background:repeating-conic-gradient(from 0deg, rgba(255,255,255,0.4) 0deg 7deg, transparent 7deg 20deg);
+    opacity:0.65;
+  }
+  .bunting{position:absolute; top:0; left:0; width:100%; opacity:0.95;}
+  .confetti{position:absolute; border-radius:3px; z-index:0;}
+  .wave{position:absolute; left:0; width:100%; opacity:0.9;}
+  .wave.w1{bottom:14%;}
+  .wave.w2{bottom:6%; opacity:0.55;}
+
+  .hero-title{
+    position:relative; z-index:3;
+    text-align:center;
+    color:var(--blanc);
+    padding:0 12px;
+  }
+  .eyebrow{
+    display:inline-block;
+    font-family:'Quicksand',sans-serif;
+    font-weight:700;
+    letter-spacing:0.16em;
+    font-size:12.5px;
+    text-transform:uppercase;
+    background:rgba(255,255,255,0.16);
+    border:1px solid rgba(255,255,255,0.4);
+    padding:6px 14px;
+    border-radius:100px;
+    margin-bottom:14px;
+    backdrop-filter:blur(3px);
+  }
+  .hero-title h1{
+    font-size:clamp(38px,10vw,54px);
+    line-height:1.02;
+    letter-spacing:0.5px;
+  }
+  .hero-title h1 span{display:block; color:var(--bleu-fonce);}
+  .hero-sub{
+    margin-top:12px;
+    font-size:15.5px;
+    font-weight:600;
+    opacity:0.95;
+  }
+
+  .lock{
+    position:relative; z-index:3;
+    margin:26px auto 4px; width:min(300px,86%);
+    background:rgba(255,253,248,0.16);
+    border:1px solid rgba(255,255,255,0.4);
+    backdrop-filter:blur(6px);
+    border-radius:18px;
+    padding:18px 18px 18px;
+    color:var(--blanc);
+    text-align:center;
+  }
+  .lock p.q{margin:0 0 4px; font-size:14px; font-weight:600; line-height:1.4;}
+  .lock p.hint{margin:0 0 14px; font-size:11.5px; font-weight:600; opacity:0.8; font-style:italic;}
+  .dials{position:relative; display:flex; align-items:center; justify-content:center; gap:7px; margin-bottom:16px;}
+  .dial{
+    height:132px; width:42px; overflow-y:scroll; scroll-snap-type:y mandatory;
+    -webkit-overflow-scrolling:touch;
+    background:var(--blanc);
+    box-shadow:0 3px 10px rgba(43,33,24,0.12);
+    border-radius:10px;
+    scrollbar-width:none;
+  }
+  .dial::-webkit-scrollbar{display:none;}
+  .dial-pad{height:44px;}
+  .dial-item{
+    height:44px; line-height:44px; scroll-snap-align:center;
+    font-family:'Fredoka',sans-serif; font-size:21px; font-weight:600;
+    color:#D8CFC0;
+    transition:color .15s ease;
+  }
+  .dial-item.active{color:var(--bleu-fonce);}
+  .dial-slash{font-family:'Fredoka',sans-serif; font-size:22px; font-weight:600; color:rgba(255,255,255,0.7);}
+  .dial-window{
+    position:absolute; left:0; right:0; top:50%; transform:translateY(-50%);
+    height:44px; border-top:2px solid var(--bleu-clair); border-bottom:2px solid var(--bleu-clair);
+    pointer-events:none; z-index:2;
+  }
+  .lock.solved .dial{pointer-events:none; opacity:0.75;}
+  .lock-btn{
+    font-family:'Fredoka',sans-serif; font-size:14px; font-weight:600;
+    background:var(--blanc); color:var(--bleu-fonce);
+    border:none; padding:11px 26px; border-radius:100px;
+    cursor:pointer; touch-action:manipulation;
+    transition:transform .15s ease;
+  }
+  .lock-btn:active{transform:scale(0.95);}
+  .lock.solved .lock-btn{display:none;}
+  .lock.shake{animation:lockshake .4s ease;}
+  @keyframes lockshake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-6px);}
+    75%{transform:translateX(6px);}
+  }
+  .lock-msg{
+    margin-top:14px; font-size:13px; min-height:16px;
+    font-weight:700; color:var(--bleu-fonce);
+    opacity:0; transition:opacity .3s ease;
+  }
+  .lock-msg.show{opacity:1;}
+  .lock-msg.err{color:var(--bleu-fonce);}
+
+  .scrollcue{
+    position:relative; z-index:3;
+    text-align:center; margin-top:20px;
+    color:var(--bleu-fonce); font-size:12px; font-weight:700;
+    letter-spacing:0.08em; text-transform:uppercase;
+    opacity:0; transition:opacity .4s ease;
+  }
+  .scrollcue.show{opacity:1;}
+  .scrollcue .arrow{
+    display:block; margin:6px auto 0; width:20px; height:20px;
+    border-right:3px solid var(--bleu-fonce); border-bottom:3px solid var(--bleu-fonce);
+    transform:rotate(45deg);
+    animation:bounce 1.6s infinite;
+  }
+  @keyframes bounce{0%,100%{transform:rotate(45deg) translate(0,0);} 50%{transform:rotate(45deg) translate(4px,4px);}}
+
+  /* ---------- SECTIONS GENERIC ---------- */
+  section.block{padding:56px 0 10px;}
+  .kicker{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12.5px; font-weight:700; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--bleu-mid);
+    margin-bottom:8px;
+  }
+  .kicker::before{content:''; width:22px; height:2px; background:var(--bleu-mid); display:inline-block; border-radius:2px;}
+  .block h2{font-size:28px; color:var(--bleu-fonce); margin-bottom:6px;}
+  .block > .wrap > p.lede{color:#5b5346; font-size:14.5px; margin-bottom:26px; font-weight:600;}
+
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .55s ease, transform .55s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* ---------- DEPART CARD ---------- */
+  .depart-card{
+    background:var(--bleu-fonce); color:var(--blanc);
+    border-radius:var(--radius); padding:20px 20px 18px;
+    box-shadow:var(--shadow); margin-bottom:30px;
+    position:relative; overflow:hidden;
+  }
+  .depart-card::after{
+    content:'🧭'; position:absolute; right:-6px; bottom:-14px; font-size:80px; opacity:0.12;
+  }
+  .depart-row{display:flex; gap:12px; align-items:flex-start; margin-bottom:12px;}
+  .depart-row:last-child{margin-bottom:0;}
+  .depart-time{
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:15px;
+    background:rgba(255,255,255,0.14); border-radius:10px; padding:5px 10px;
+    min-width:64px; text-align:center; flex-shrink:0;
+  }
+  .depart-row p{font-size:13.8px; margin:0; opacity:0.95;}
+  .depart-row b{color:var(--bleu-clair);}
+
+  /* ---------- TIMELINE / ACCORDION ---------- */
+  .timeline{margin-bottom:6px;}
+  .titem{margin-bottom:14px;}
+  .tcard{
+    background:#FFFFFF; border-radius:16px; box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .thead{
+    width:100%; border:none; background:none; text-align:left;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 16px; cursor:pointer; gap:10px; font-family:'Quicksand',sans-serif;
+  }
+  .thead .ttime{font-size:12px; font-weight:700; color:var(--bleu-mid); letter-spacing:0.04em;}
+  .thead .ttitle{font-family:'Fredoka',sans-serif; font-size:16px; color:var(--bleu-fonce); font-weight:600;}
+  .thead .ticon{font-size:20px; flex-shrink:0;}
+  .thead .tchev{margin-left:auto; font-size:16px; color:var(--bleu-mid); transition:transform .3s ease; flex-shrink:0;}
+  .titem.open .tchev{transform:rotate(180deg);}
+  .tbody{max-height:0; overflow:hidden; transition:max-height .35s ease;}
+  .tbody-in{padding:0 16px 16px; font-size:13.6px; color:#4a4337;}
+  .tbody-in ul{margin:8px 0 0; padding-left:18px;}
+  .tbody-in li{margin-bottom:4px;}
+  .tag{
+    display:inline-block; font-size:11px; font-weight:700; color:var(--bleu-fonce);
+    background:var(--bleu-pale); padding:3px 9px; border-radius:100px; margin-top:8px;
+  }
+
+  /* ---------- TEAMS ---------- */
+  .teams-grid{display:flex; flex-direction:column; gap:16px;}
+  .team{
+    height:160px;
+  }
+  .team-inner{
+    position:relative; width:100%; height:100%;
+    cursor:pointer;
+  }
+  .team-face{
+    position:absolute; inset:0;
+    border-radius:var(--radius);
+    padding:22px 20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    text-align:center;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .32s ease;
+  }
+  .team-face.front{opacity:1; pointer-events:auto;}
+  .team.flipped .team-face.front{opacity:0; pointer-events:none;}
+  .team.flipped .team-face.back{opacity:1; pointer-events:auto;}
+  .team-decor{position:absolute; right:-8px; bottom:-16px; font-size:88px; opacity:0.16; z-index:0; pointer-events:none;}
+  .team .content{position:relative; z-index:1;}
+  .team h3{position:relative; z-index:1; font-size:20px; margin:0; color:#fff; font-weight:600; display:flex; align-items:center; gap:8px; justify-content:center;}
+  .team .tap-hint{
+    position:relative; z-index:1; font-size:11.5px; font-weight:700; color:#fff;
+    background:rgba(255,255,255,0.22); padding:6px 14px; border-radius:100px;
+    margin-top:14px;
+  }
+  .team .members{
+    position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:0 6px;
+    justify-content:center; font-size:15px; font-weight:700; color:#fff;
+  }
+  .member:not(:last-child)::after{content:'•'; margin-left:6px; opacity:0.6; font-weight:400;}
+  .team.light h3, .team.light .members, .team.light .tap-hint{color:var(--bleu-fonce);}
+  .team.light .tap-hint{background:rgba(78,127,176,0.12);}
+
+  /* ---------- CHECKLIST ---------- */
+  .progress-wrap{margin-bottom:22px;}
+  .progress-label{display:flex; justify-content:space-between; font-size:12.5px; font-weight:700; color:var(--bleu-fonce); margin-bottom:6px;}
+  .progress-bar{height:10px; background:var(--bleu-pale); border-radius:100px; overflow:hidden;}
+  .progress-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--bleu-fonce), var(--bleu-clair)); border-radius:100px; transition:width .3s ease;}
+
+  .check-list{display:flex; flex-direction:column; gap:9px; margin-bottom:8px;}
+  .check-item{
+    display:flex; align-items:center; gap:12px;
+    background:#FFFFFF; border-radius:14px; padding:12px 14px;
+    box-shadow:0 3px 10px rgba(43,33,24,0.07); cursor:pointer; user-select:none;
+  }
+  .box{
+    width:23px; height:23px; border-radius:7px; border:2px solid var(--bleu-mid);
+    flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    font-size:14px; color:transparent; transition:all .18s ease;
+  }
+  .check-item.checked .box{background:var(--bleu-fonce); border-color:var(--bleu-fonce); color:#fff;}
+  .check-item.checked span.label{text-decoration:line-through; opacity:0.5;}
+  .check-item .label{font-size:14px; font-weight:600;}
+  .check-item .icon{font-size:16px; margin-left:auto; opacity:0.6; flex-shrink:0;}
+
+  /* ---------- PRÊT ? ---------- */
+  .pret{padding:50px 0 10px; text-align:center;}
+  .pret h2{font-size:22px; color:var(--bleu-fonce); margin-bottom:20px;}
+  .pret-btn{
+    font-family:'Fredoka',sans-serif; font-size:16px; font-weight:600;
+    background:var(--bleu-fonce); color:#fff;
+    border:none; padding:14px 30px; border-radius:100px;
+    cursor:pointer; box-shadow:var(--shadow); touch-action:manipulation;
+    transition:transform .15s ease;
+  }
+  .pret-btn:active{transform:scale(0.95);}
+  .pret-btn.done{background:var(--bleu-mid);}
+  .pret-msg{
+    margin-top:16px; font-size:14px; font-weight:700; color:var(--bleu-mid);
+    opacity:0; transition:opacity .3s ease;
+  }
+  .pret-msg.show{opacity:1;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    margin-top:30px; padding:40px 0 46px;
+    background:var(--bleu-fonce); color:var(--blanc); text-align:center; position:relative; overflow:hidden;
+  }
+  footer h3{font-size:20px; margin-bottom:8px; position:relative; z-index:1;}
+  footer p{font-size:13.5px; opacity:0.85; margin:0; position:relative; z-index:1;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="sunburst"></div>
+
+  <svg class="bunting" viewBox="0 0 400 30" preserveAspectRatio="none" height="30">
+    <polygon points="10,0 30,0 20,22" fill="#FFD97D"/>
+    <polygon points="50,0 70,0 60,22" fill="#FFFDF8"/>
+    <polygon points="90,0 110,0 100,22" fill="#FFB4A2"/>
+    <polygon points="130,0 150,0 140,22" fill="#A9D6F0"/>
+    <polygon points="170,0 190,0 180,22" fill="#FFFDF8"/>
+    <polygon points="210,0 230,0 220,22" fill="#FFD97D"/>
+    <polygon points="250,0 270,0 260,22" fill="#FFB4A2"/>
+    <polygon points="290,0 310,0 300,22" fill="#FFFDF8"/>
+    <polygon points="330,0 350,0 340,22" fill="#A9D6F0"/>
+    <polygon points="370,0 390,0 380,22" fill="#FFD97D"/>
+  </svg>
+
+  <div class="confetti" style="width:12px; height:12px; top:3%; left:15%; background:#FFD97D; transform:rotate(18deg);"></div>
+  <div class="confetti" style="width:9px; height:9px; top:6%; left:75%; background:#FFFDF8; transform:rotate(-12deg);"></div>
+  <div class="confetti" style="width:11px; height:11px; top:8%; left:40%; background:#FFD97D; transform:rotate(12deg); border-radius:50%;"></div>
+  <div class="confetti" style="width:8px; height:8px; top:5%; left:60%; background:#A9D6F0; transform:rotate(-30deg);"></div>
+
+  <svg class="wave w1" viewBox="0 0 400 40" preserveAspectRatio="none" height="40"><path d="M0 20 Q50 5 100 20 T200 20 T300 20 T400 20 V40 H0 Z" fill="#ffffff"/></svg>
+  <svg class="wave w2" viewBox="0 0 400 40" preserveAspectRatio="none" height="30"><path d="M0 15 Q50 30 100 15 T200 15 T300 15 T400 15 V40 H0 Z" fill="#ffffff"/></svg>
+
+  <div class="hero-title">
+    <h1>Team Building<span>Été 2026</span></h1>
+    <p class="hero-sub">On se retrouve tous ensemble pour souffler, rigoler et profiter à fond.</p>
+  </div>
+
+  <div class="lock">
+    <p class="q">Pour débloquer la suite, entre le bon code :</p>
+    <p class="hint">Indice : LA date à noter absolument dans ton agenda 📌</p>
+    <div class="dials">
+      <div class="dial" id="dial1"></div>
+      <div class="dial" id="dial2"></div>
+      <span class="dial-slash">/</span>
+      <div class="dial" id="dial3"></div>
+      <div class="dial" id="dial4"></div>
+      <div class="dial-window"></div>
+    </div>
+    <button class="lock-btn" onclick="checkCode()">Valider</button>
+    <div class="lock-msg" id="lockMsg">09/07, bien joué, on t'ouvre la suite 🎉</div>
+  </div>
+
+  <div class="scrollcue" id="scrollcue">Fais glisser vers le haut<span class="arrow"></span></div>
+</header>
+
+<!-- ================= PROGRAMME ================= -->
+<section class="block" id="programme">
+  <div class="wrap">
+    <span class="kicker reveal">Le programme</span>
+    <h2 class="reveal">La journée, minute par minute</h2>
+    <p class="lede reveal">Tape sur chaque étape pour voir le détail.</p>
+
+    <div class="depart-card reveal">
+      <div class="depart-row">
+        <div class="depart-time">9h00</div>
+        <p>Départ des agences de <b>Bazas</b>, <b>Arcachon</b> et <b>Bordeaux</b>. Comptez environ 2h de trajet.</p>
+      </div>
+      <div class="depart-row">
+        <div class="depart-time">11h00</div>
+        <p>Rendez-vous sur le lieu du team building. <b>L'adresse exacte sera communiquée le matin même</b>, avant le départ.</p>
+      </div>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="titem">
+        <div class="tcard">
+          <button class="thead" onclick="toggle(this)">
+            <span class="ticon">🤝</span>
+            <span style="flex:1;">
+              <span class="ttime">11H00 – 12H00</span><br>
+              <span class="ttitle">Réunion d'équipe</span>
+            </span>
+            <span class="tchev">▾</span>
+          </button>
+          <div class="tbody"><div class="tbody-in">On se retrouve à un point donné pour une petite réunion d'équipe : les chiffres et quelques points clés.</div></div>
+        </div>
+      </div>
+
+      <div class="titem">
+        <div class="tcard">
+          <button class="thead" onclick="toggle(this)">
+            <span class="ticon">🎨</span>
+            <span style="flex:1;">
+              <span class="ttime">12H00</span><br>
+              <span class="ttitle">Déjeuner collaboratif</span>
+            </span>
+            <span class="tchev">▾</span>
+          </button>
+          <div class="tbody"><div class="tbody-in">
+            Chaque équipe reçoit une couleur et compose un buffet 100% dans le thème : des aliments naturellement colorés, ou des produits dont l'emballage matche la couleur imposée. Pas besoin d'un seul gros plat, misez plutôt sur plusieurs petites choses faciles à partager (gâteaux apéro, légumes, fruits...).
+            <ul>
+              <li>Des petites choses salées</li>
+              <li>Des petites douceurs sucrées</li>
+              <li>Des boissons sans alcool</li>
+              <li>Des boissons avec alcool, pour ceux qui le souhaitent</li>
+            </ul>
+            <span class="tag">Retrouve les équipes de couleur juste en dessous 👇</span>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="titem">
+        <div class="tcard">
+          <button class="thead" onclick="toggle(this)">
+            <span class="ticon">☀️</span>
+            <span style="flex:1;">
+              <span class="ttime">APRÈS-MIDI</span><br>
+              <span class="ttitle">Temps libre</span>
+            </span>
+            <span class="tchev">▾</span>
+          </button>
+          <div class="tbody"><div class="tbody-in">Temps libre pour tout le monde, avec de quoi s'occuper sur place. Chacun vaque à ses occupations.</div></div>
+        </div>
+      </div>
+
+      <div class="titem">
+        <div class="tcard">
+          <button class="thead" onclick="toggle(this)">
+            <span class="ticon">🏆</span>
+            <span style="flex:1;">
+              <span class="ttime">15H30 – 17H30</span><br>
+              <span class="ttitle">Activité</span>
+            </span>
+            <span class="tchev">▾</span>
+          </button>
+          <div class="tbody"><div class="tbody-in">Détails communiqués sur place, mais l'esprit d'équipe en béton armé est vivement conseillé.</div></div>
+        </div>
+      </div>
+
+      <div class="titem">
+        <div class="tcard">
+          <button class="thead" onclick="toggle(this)">
+            <span class="ticon">🍹</span>
+            <span style="flex:1;">
+              <span class="ttime">17H30 – 19H00</span><br>
+              <span class="ttitle">Temps libre</span>
+            </span>
+            <span class="tchev">▾</span>
+          </button>
+          <div class="tbody"><div class="tbody-in">Temps libre : de quoi prendre une douche et vaquer à ses occupations avant la suite.</div></div>
+        </div>
+      </div>
+
+      <div class="titem">
+        <div class="tcard">
+          <button class="thead" onclick="toggle(this)">
+            <span class="ticon">🎲</span>
+            <span style="flex:1;">
+              <span class="ttime">19H00 – 20H30</span><br>
+              <span class="ttitle">Activité surprise</span>
+            </span>
+            <span class="tchev">▾</span>
+          </button>
+          <div class="tbody"><div class="tbody-in">Chut, c'est une surprise ! Tenez-vous prêts à faire chauffer votre stratégie et votre sens de l'observation.</div></div>
+        </div>
+      </div>
+
+      <div class="titem">
+        <div class="tcard">
+          <button class="thead" onclick="toggle(this)">
+            <span class="ticon">🥂</span>
+            <span style="flex:1;">
+              <span class="ttime">DÈS 21H00</span><br>
+              <span class="ttitle">Repas et soirée</span>
+            </span>
+            <span class="tchev">▾</span>
+          </button>
+          <div class="tbody"><div class="tbody-in">Repas convivial tous ensemble pour passer un bon moment, puis festivités toute la soirée.</div></div>
+        </div>
+      </div>
+
+      <div class="titem">
+        <div class="tcard">
+          <button class="thead" onclick="toggle(this)">
+            <span class="ticon">🚗</span>
+            <span style="flex:1;">
+              <span class="ttime">LENDEMAIN</span><br>
+              <span class="ttitle">Départ à 10h max</span>
+            </span>
+            <span class="tchev">▾</span>
+          </button>
+          <div class="tbody"><div class="tbody-in">Réveil tranquille, petit-déjeuner et départ du lieu avant 10h max.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EQUIPES ================= -->
+<section class="block" id="equipes">
+  <div class="wrap">
+    <span class="kicker reveal">Les équipes</span>
+    <h2 class="reveal">Trouve ta couleur</h2>
+    <p class="lede reveal">Pour le déjeuner, chaque binôme ou trio reçoit une couleur : vous amenez des aliments dans cette couleur et vous portez un vêtement ou accessoire assorti dès le matin. Tape sur une carte pour découvrir qui est avec toi 👇</p>
+
+    <div class="teams-grid">
+      <div class="team reveal" onclick="this.classList.toggle('flipped')">
+        <div class="team-inner">
+          <div class="team-face front" style="background:linear-gradient(135deg,#8FB8E8,#6C9CDB);">
+            <span class="team-decor">🫐</span>
+            <div class="content"><h3>🔵 Équipe Bleu</h3></div>
+            <span class="tap-hint">👉 Tape pour voir l'équipe</span>
+          </div>
+          <div class="team-face back" style="background:linear-gradient(135deg,#8FB8E8,#6C9CDB);">
+            <span class="team-decor">🫐</span>
+            <div class="members">
+              <span class="member">Flavie</span>
+              <span class="member">Jean-Noël</span>
+              <span class="member">Lilia</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team reveal" onclick="this.classList.toggle('flipped')">
+        <div class="team-inner">
+          <div class="team-face front" style="background:linear-gradient(135deg,#8FC9A0,#6BAE80);">
+            <span class="team-decor">🥝</span>
+            <div class="content"><h3>🟢 Équipe Vert</h3></div>
+            <span class="tap-hint">👉 Tape pour voir l'équipe</span>
+          </div>
+          <div class="team-face back" style="background:linear-gradient(135deg,#8FC9A0,#6BAE80);">
+            <span class="team-decor">🥝</span>
+            <div class="members">
+              <span class="member">Corentin</span>
+              <span class="member">Véronique</span>
+              <span class="member">Guillaume</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team reveal" onclick="this.classList.toggle('flipped')">
+        <div class="team-inner">
+          <div class="team-face front" style="background:linear-gradient(135deg,#E3A8C9,#C89BDD);">
+            <span class="team-decor">🍇</span>
+            <div class="content"><h3>💗 Équipe Rose / Violet</h3></div>
+            <span class="tap-hint">👉 Tape pour voir l'équipe</span>
+          </div>
+          <div class="team-face back" style="background:linear-gradient(135deg,#E3A8C9,#C89BDD);">
+            <span class="team-decor">🍇</span>
+            <div class="members">
+              <span class="member">Charlotte</span>
+              <span class="member">Franck Pradalier</span>
+              <span class="member">Brigitte</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team light reveal" onclick="this.classList.toggle('flipped')">
+        <div class="team-inner">
+          <div class="team-face front" style="background:linear-gradient(135deg,#FFFDF8,#EDE6D4);">
+            <span class="team-decor" style="opacity:0.22;">🥥</span>
+            <div class="content"><h3>⚪ Équipe Blanc</h3></div>
+            <span class="tap-hint">👉 Tape pour voir l'équipe</span>
+          </div>
+          <div class="team-face back" style="background:linear-gradient(135deg,#FFFDF8,#EDE6D4);">
+            <span class="team-decor" style="opacity:0.22;">🥥</span>
+            <div class="members">
+              <span class="member">Léa Greffe</span>
+              <span class="member">Benjamin</span>
+              <span class="member">Sébastien</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team reveal" onclick="this.classList.toggle('flipped')">
+        <div class="team-inner">
+          <div class="team-face front" style="background:linear-gradient(135deg,#FFA98F,#FFCB8E);">
+            <span class="team-decor">🍊</span>
+            <div class="content"><h3>🟠 Équipe Rouge / Orange</h3></div>
+            <span class="tap-hint">👉 Tape pour voir l'équipe</span>
+          </div>
+          <div class="team-face back" style="background:linear-gradient(135deg,#FFA98F,#FFCB8E);">
+            <span class="team-decor">🍊</span>
+            <div class="members">
+              <span class="member">Marion</span>
+              <span class="member">Jean-François</span>
+              <span class="member">Maureen</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team reveal" onclick="this.classList.toggle('flipped')">
+        <div class="team-inner">
+          <div class="team-face front" style="background:linear-gradient(135deg,#8A7364,#6E5A4C);">
+            <span class="team-decor">🍫</span>
+            <div class="content"><h3>🟤 Équipe Noir / Marron</h3></div>
+            <span class="tap-hint">👉 Tape pour voir l'équipe</span>
+          </div>
+          <div class="team-face back" style="background:linear-gradient(135deg,#8A7364,#6E5A4C);">
+            <span class="team-decor">🍫</span>
+            <div class="members">
+              <span class="member">Hnia</span>
+              <span class="member">Franck D</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ================= CHECKLIST ================= -->
+<section class="block" id="checklist">
+  <div class="wrap">
+    <span class="kicker reveal">Le sac</span>
+    <h2 class="reveal">Ce qu'il faut apporter</h2>
+    <p class="lede reveal">Coche au fur et à mesure que tu prépares ton sac.</p>
+
+    <div class="progress-wrap reveal">
+      <div class="progress-label"><span>Préparation du sac</span><span id="progressText">0 / 18</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div class="check-list reveal" id="checkList">
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Maillot de bain + serviette de piscine</span><span class="icon">🩱</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Vêtements confortables, qui ne craignent rien</span><span class="icon">👕</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Des baskets de sport</span><span class="icon">👟</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Une tenue de rechange</span><span class="icon">👗</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Crème solaire</span><span class="icon">🧴</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Des lunettes de soleil</span><span class="icon">🕶️</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Des lunettes de piscine</span><span class="icon">🥽</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Anti-moustique</span><span class="icon">🦟</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Gel douche, nécessaire de toilette</span><span class="icon">🧼</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Gourde ou bouteille d'eau</span><span class="icon">💧</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Tongs ou chaussures d'eau</span><span class="icon">🩴</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Carte d'identité ou passeport</span><span class="icon">🪪</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Un accessoire de la couleur de ton équipe, dès le matin</span><span class="icon">🎨</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Ta contribution au buffet couleur</span><span class="icon">🥗</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Une petite glacière ou sac isotherme si besoin</span><span class="icon">🧊</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Des boules de pétanque</span><span class="icon">⚫</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Un jeu de société</span><span class="icon">🎲</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Une tenue plus habillée pour le repas et la soirée</span><span class="icon">✨</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Un pull ou une petite veste</span><span class="icon">🧥</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Ta bonne humeur et ton sens du défi</span><span class="icon">😄</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Un esprit d'équipe en béton armé</span><span class="icon">🤝</span></div>
+      <div class="check-item" onclick="check(this)"><div class="box">✓</div><span class="label">Ton plus beau sourire</span><span class="icon">😁</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="pret">
+  <div class="wrap">
+    <h2 class="reveal">Prêt pour ce team building ?</h2>
+    <button class="pret-btn reveal" id="pretBtn" onclick="confirmReady()">Bien sûr que oui ! 🙌</button>
+    <p class="pret-msg" id="pretMsg">On n'attendait que ça 😎</p>
+  </div>
+</section>
+
+<footer>
+  <h3>Hâte de tous se retrouver !</h3>
+  <p>Team Building Été 2026, un chouette moment à passer tous ensemble.</p>
+</footer>
+
+<script>
+  // Verrouillage : impossible d'accéder à la suite sans résoudre le code
+  document.documentElement.classList.add('locked');
+  let locked = true;
+  function preventScroll(e){
+    if(!locked) return;
+    if(e.target.closest && e.target.closest('.dial')) return; // laisse défiler les molettes du cadenas
+    e.preventDefault();
+  }
+  window.addEventListener('wheel', preventScroll, {passive:false});
+  window.addEventListener('touchmove', preventScroll, {passive:false});
+
+  // Accordion programme
+  function toggle(btn){
+    const item = btn.closest('.titem');
+    const body = item.querySelector('.tbody');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.titem.open').forEach(o=>{
+      if(o!==item){ o.classList.remove('open'); o.querySelector('.tbody').style.maxHeight=null; }
+    });
+    if(isOpen){
+      item.classList.remove('open');
+      body.style.maxHeight = null;
+    } else {
+      item.classList.add('open');
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
+  }
+
+  // Cadenas à molette : bloque l'accès à la suite tant que le code n'est pas validé
+  let solved = false;
+  const ITEM_H = 44;
+
+  function initDial(el, values){
+    el.innerHTML = '<div class="dial-pad"></div>' +
+      values.map(v => `<div class="dial-item" data-val="${v}">${v}</div>`).join('') +
+      '<div class="dial-pad"></div>';
+    el.querySelector('.dial-item').classList.add('active');
+    const state = { value: values[0] };
+    let timer = null;
+    el.addEventListener('scroll', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        let idx = Math.round(el.scrollTop / ITEM_H);
+        idx = Math.max(0, Math.min(values.length - 1, idx));
+        el.scrollTo({ top: idx * ITEM_H, behavior: 'smooth' });
+        state.value = values[idx];
+        el.querySelectorAll('.dial-item').forEach(it => it.classList.toggle('active', it.dataset.val === state.value));
+      }, 120);
+    });
+    return state;
+  }
+
+  const digitValues = ['0','1','2','3','4','5','6','7','8','9'];
+  const dial1 = initDial(document.getElementById('dial1'), digitValues);
+  const dial2 = initDial(document.getElementById('dial2'), digitValues);
+  const dial3 = initDial(document.getElementById('dial3'), digitValues);
+  const dial4 = initDial(document.getElementById('dial4'), digitValues);
+  const CODE = ['0','9','0','7'];
+
+  function checkCode(){
+    if(solved) return;
+    const attempt = [dial1.value, dial2.value, dial3.value, dial4.value];
+    const lockEl = document.querySelector('.lock');
+    const msg = document.getElementById('lockMsg');
+    if(attempt.join('') === CODE.join('')){
+      solved = true;
+      locked = false;
+      document.documentElement.classList.remove('locked');
+      lockEl.classList.add('solved');
+      msg.textContent = '09/07, bien joué, on t\'ouvre la suite 🎉';
+      msg.classList.remove('err');
+      msg.classList.add('show');
+      document.getElementById('scrollcue').classList.add('show');
+    } else {
+      msg.textContent = "Ce n'est pas ça, réessaie 🔍";
+      msg.classList.add('err','show');
+      lockEl.classList.remove('shake');
+      void lockEl.offsetWidth;
+      lockEl.classList.add('shake');
+    }
+  }
+
+  // Prêt ?
+  function confirmReady(){
+    const btn = document.getElementById('pretBtn');
+    const msg = document.getElementById('pretMsg');
+    btn.textContent = 'Trop hâte ! 🎉';
+    btn.classList.add('done');
+    btn.disabled = true;
+    msg.classList.add('show');
+    btn.animate([
+      { transform: 'scale(1)' },
+      { transform: 'scale(1.08)' },
+      { transform: 'scale(1)' }
+    ], { duration: 300, easing: 'ease-out' });
+  }
+
+  // Checklist
+  const total = document.querySelectorAll('.check-item').length;
+  document.getElementById('progressText').textContent = '0 / ' + total;
+  function check(item){
+    item.classList.toggle('checked');
+    const done = document.querySelectorAll('.check-item.checked').length;
+    document.getElementById('progressText').textContent = done + ' / ' + total;
+    document.getElementById('progressFill').style.width = (done/total*100) + '%';
+  }
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
